@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Loader, Card, FormField } from '../components';
+import axiosInstance from '../api/axiosInstance';
 
 const RenderCards = ({ data, title }) => {
   if (data?.length > 0) {
@@ -23,22 +24,10 @@ const Home = () => {
       setLoading(true);
 
       try {
-        // Use the environment variable for the API URL
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/post`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-          setAllPosts(result.data.reverse());
-        } else {
-          throw new Error('Failed to fetch posts');
-        }
+        const response = await axiosInstance.get('/post');
+        setAllPosts(response.data.data.reverse());
       } catch (error) {
-        alert(error.message);
+        alert(error?.response?.data?.message || 'Failed to fetch posts');
       } finally {
         setLoading(false);
       }
@@ -53,11 +42,10 @@ const Home = () => {
 
     setSearchTimeout(
       setTimeout(() => {
-        const searchResults = allPosts.filter((item) =>
+        const searchResults = allPosts?.filter((item) =>
           item.name.toLowerCase().includes(searchText.toLowerCase()) ||
           item.caption.toLowerCase().includes(searchText.toLowerCase())
         );
-
         setSearchedResults(searchResults);
       }, 500)
     );

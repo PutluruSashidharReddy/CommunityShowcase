@@ -1,13 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
-    sourcemap: false,
+    sourcemap: false, // ✅ This is valid
   },
   server: {
-    sourcemap: false,
+    hmr: {
+      overlay: false, // ✅ Optional: Disable Vite HMR error overlay
+    }
   }
 })

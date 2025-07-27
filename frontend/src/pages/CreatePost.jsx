@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormField, Loader } from '../components';
+import axiosInstance from '../api/axiosInstance';
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -18,29 +19,21 @@ const CreatePost = () => {
 
     if (form.caption && form.photo) {
       setLoading(true);
-
       try {
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('caption', form.caption);
         formData.append('photo', form.photo);
 
-        // Use the environment variable for the API URL
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/post`, {
-          method: 'POST',
-          body: formData,
+        await axiosInstance.post('/post', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: 'An unexpected error occurred.' }));
-          throw new Error(errorData.message || 'Failed to create post');
-        }
-
-        await response.json();
         navigate('/');
       } catch (err) {
-        setError(err.message);
-        alert(err.message);
+        const message = err?.response?.data?.message || 'Failed to create post';
+        setError(message);
+        alert(message);
       } finally {
         setLoading(false);
       }

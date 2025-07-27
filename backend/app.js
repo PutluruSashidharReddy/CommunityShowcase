@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Use a simple, default cors() here. vercel.json will handle the specific headers.
-app.use(cors("http://localhost:5173"));
+app.use(cors("https://community-showcase-vijo.vercel.app/"));
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));

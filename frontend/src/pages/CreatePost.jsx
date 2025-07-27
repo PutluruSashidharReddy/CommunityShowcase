@@ -25,7 +25,8 @@ const CreatePost = () => {
         formData.append('caption', form.caption);
         formData.append('photo', form.photo);
 
-        const response = await fetch('http://localhost:8080/api/v1/post', {
+        // Use the environment variable for the API URL
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/post`, {
           method: 'POST',
           body: formData,
         });
